@@ -121,5 +121,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
+/node_modules/
+package.json
 # End of https://www.gitignore.io/api/macos,windows,intellij,visualstudiocode
