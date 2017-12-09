@@ -11,46 +11,46 @@
 
 // // app.get('/testServer', function(req, res) {
 
-// // oracledb.getConnection(
-// //     {
-// //       user          : dbConfig.user,
-// //       password      : dbConfig.password,
-// //       connectString : dbConfig.connectString
-// //     },
-// //     function(err, connection)
-// //     {
-// //       if (err) {
-// //         console.error(err.message);
-// //         return;
-// //       }
-// //       console.log('Connection was successful!');
+// oracledb.getConnection(
+//     {
+//       user          : dbConfig.user,
+//       password      : dbConfig.password,
+//       connectString : dbConfig.connectString
+//     },
+//     function(err, connection)
+//     {
+//       if (err) {
+//         console.error(err.message);
+//         return;
+//       }
+//       console.log('Connection was successful!');
       
-// //       connection.execute(
-// //         "SELECT * FROM V_MAIN",
-// //         // [180],
-// //         // { maxRows: 10 },  // a maximum of 10 rows will be returned.  Default limit is 100
-// //         [],
-// //         {resultSet:true,
-// //         prefetchRows: 25 // the prefetch size can be set for each que
-// //         },
-// //         function(err, result)
-// //         {
-// //           if (err) {
-// //              console.error('some error: '+ err.message); 
-// //              doRelease(connection);
-// //              return; 
-// //             }
-// //             // obj = {print: result};
-// //             // console.log("OBJ: "+obj);
-// //             // res.render('print', obj); 
-// //             // res.render('signup', obj); 
-// //             // fetchOneRowFromRS(connection, result.resultSet);
-// //           // console.log("result.metadata " + result.metaData); // [ { name: 'DEPARTMENT_ID' }, { name: 'DEPARTMENT_NAME' } ]
-// //           // console.log("result.rows " + result.rows);     // [ [ 180, 'Construction' ] ]
-// //           doRelease(connection);
-// //         });
-// //         console.log()
-// //     });
+//       connection.execute(
+//         "SELECT * FROM V_MAIN",
+//         // [180],
+//         // { maxRows: 10 },  // a maximum of 10 rows will be returned.  Default limit is 100
+//         [],
+//         {resultSet:true,
+//         prefetchRows: 25 // the prefetch size can be set for each que
+//         },
+//         function(err, result)
+//         {
+//           if (err) {
+//              console.error('some error: '+ err.message); 
+//              doRelease(connection);
+//              return; 
+//             }
+//             // obj = {print: result};
+//             // console.log("OBJ: "+obj);
+//             // res.render('print', obj); 
+//             // res.render('signup', obj); 
+//             // fetchOneRowFromRS(connection, result.resultSet);
+//           // console.log("result.metadata " + result.metaData); // [ { name: 'DEPARTMENT_ID' }, { name: 'DEPARTMENT_NAME' } ]
+//           // console.log("result.rows " + result.rows);     // [ [ 180, 'Construction' ] ]
+//           doRelease(connection);
+//         });
+//         console.log()
+//     });
 // //   });
 
 // // require('./config/passport')(passport); //pass passport for configuration
@@ -156,6 +156,8 @@ var dbConfig = require('./config/database.js');
 //   )
 // };
 function executeQuery(query) {
+  console.log('4');
+  console.log("EXECUTE QUERY getting connection");
   oracledb.getConnection(
     {
       user          : dbConfig.user,
@@ -164,25 +166,33 @@ function executeQuery(query) {
 
     }, function(err, connection) {
       if(err) {
-        console.log(err);
+        console.log("100: "+ err);
         return;
       }
-      connection.execute(query, function(err, result) {
+      console.log('5');
+      console.log("Connection was successful");
+      connection.execute(query,
+        [],
+         function(err, result) {
         if(err) {
           console.log(err);
           return;
         }
-        console.log('query was: ' + query);
+        console.log('6');
+        console.log("102: " + result);
+        });
+        console.log('7');
         connection.close(function(err){
-          console.log("error at execute query: "+ err);
-          // console.error(err.message);
+          console.log("error: 7.1")
           return;
         });
-        console.log("Closed connection.")
-        });
-      console.log("Connection was successful");
-    }
-  )
+      // connection.close(function(err){
+      //   console.log("error at execute query: "+ err);
+      //   // console.error(err.message);
+      //   return;
+      // });
+      console.log("Closed connection.");
+    });
 }
 module.exports.executeQuery = executeQuery;
 // // mongoose.connect(configDB.url);
@@ -220,42 +230,42 @@ module.exports.executeQuery = executeQuery;
 //         });
 //     });
 
-function initApp() {
-  app = express();
-  httpServer = http.Server(app);
+// function initApp() {
+//   app = express();
+//   httpServer = http.Server(app);
 
-  app.use(morgan('combined')); //logger
+//   app.use(morgan('combined')); //logger
 
-  app.use('/api', api.getRouter());
+//   app.use('/api', api.getRouter());
 
-  app.use(handleError);
+//   app.use(handleError);
 
-  httpServer.on('connection', function(conn) {
-      var key = conn.remoteAddress + ':' + (conn.remotePort || '');
+//   httpServer.on('connection', function(conn) {
+//       var key = conn.remoteAddress + ':' + (conn.remotePort || '');
 
-      openHttpConnections[key] = conn;
+//       openHttpConnections[key] = conn;
 
-      conn.on('close', function() {
-          delete openHttpConnections[key];
-      });
-  });
+//       conn.on('close', function() {
+//           delete openHttpConnections[key];
+//       });
+//   });
 
-  database.addBuildupSql(statement);
+//   database.addBuildupSql(statement);
 
-  database.addTeardownSql(statement);
+//   database.addTeardownSql(statement);
 
-  database.createPool(dbconfig)
-      .then(function() {
-          httpServer.listen(3000, function() {
-              console.log('Webserver listening on localhost:3000');
-          });
-      })
-      .catch(function(err) {
-          console.error('Error occurred creating database connection pool', err);
-          console.log('Exiting process');
-          process.exit(0);
-      });
-}
+//   database.createPool(dbconfig)
+//       .then(function() {
+//           httpServer.listen(3000, function() {
+//               console.log('Webserver listening on localhost:3000');
+//           });
+//       })
+//       .catch(function(err) {
+//           console.error('Error occurred creating database connection pool', err);
+//           console.log('Exiting process');
+//           process.exit(0);
+//       });
+// }
 require('./config/passport')(passport) //pass passport for configuration
 
 
@@ -387,19 +397,19 @@ function getConnection() {
 
 module.exports.getConnection = getConnection;
 
-function execute(sql, bindParams, options, connection) {
-    return new Promise(function(resolve, reject) {
-        connection.execute(sql, bindParams, options, function(err, results) {
-            if (err) {
-                return reject(err);
-            }
+// function execute(sql, bindParams, options, connection) {
+//     return new Promise(function(resolve, reject) {
+//         connection.execute(sql, bindParams, options, function(err, results) {
+//             if (err) {
+//                 return reject(err);
+//             }
 
-            resolve(results);
-        });
-    });
-}
+//             resolve(results);
+//         });
+//     });
+// }
 
-module.exports.execute = execute;
+// module.exports.execute = execute;
 
 function releaseConnection(connection) {
     async.eachSeries(
@@ -426,12 +436,14 @@ function releaseConnection(connection) {
 module.exports.releaseConnection = releaseConnection;
 
 function simpleExecute(sql, bindParams, options) {
+  console.log('2');
     options.isAutoCommit = true;
-    console.log("SIMPLE EXECUTE");
-    console.log(sql);
     return new Promise(function(resolve, reject) {
-      console.log("INSIDE PROMISE");
+      console.log('3');
+      // console.log("INSIDE PROMISE");
       executeQuery(sql);
+      console.log('8');
+      console.log("101 Executed:" + sql);
         // createConnection()
         //     .then(function(connection){
         //       console.log("INSIDE GET CONNECTION");

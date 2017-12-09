@@ -165,7 +165,8 @@ module.exports = function(app, passport) {
             // console.log(req);
             res.setHeader('Content-Type', 'application/json');
             // serverFile.addBuildupSql("INSERT INTO AIRPORT VALUES('"+req.body.AirportCode+"', '"+req.body.AirportName+"', '"+req.body.AirportSize+"', '"+req.body.AirportType+"')");
-    
+
+            console.log('1');
             serverFile.simpleExecute(
                 "INSERT INTO AIRPORT VALUES('"+req.body.AirportCode+"', '"+req.body.AirportName+"', '"+req.body.AirportSize+"', '"+req.body.AirportType+"')",
                 {}, //no binds
@@ -173,6 +174,7 @@ module.exports = function(app, passport) {
                     outFormat: serverFile.OBJECT
                 }
             ).then(function(results) {
+                console.log('9');
                 res.send(results);
             })
             .catch(function(err) {
@@ -181,19 +183,19 @@ module.exports = function(app, passport) {
             // serverFile.addTeardownSql({
             //     sql: "BEGIN sys.dbms_session.modify_package_state(sys.dbms_session.reinitialize); END;"
             // });
-            serverFile.executeQuery("INSERT INTO AIRPORT VALUES('"+req.body.AirportCode+"', '"+req.body.AirportName+"', '"+req.body.AirportSize+"', '"+req.body.AirportType+"')")
-            serverFile.createPool(
-                {
-                        user          : dbConfig.user,
-                        password      : dbConfig.password,
-                        connectString : dbConfig.connectString
-                      }
+            // serverFile.executeQuery("INSERT INTO AIRPORT VALUES('"+req.body.AirportCode+"', '"+req.body.AirportName+"', '"+req.body.AirportSize+"', '"+req.body.AirportType+"')")
+            // serverFile.createPool(
+            //     {
+            //             user          : dbConfig.user,
+            //             password      : dbConfig.password,
+            //             connectString : dbConfig.connectString
+            //           }
                 
-            ).catch(function(err) {
-                console.error('Error occurred creating database connection pool', err);
-                console.log('Exiting process');
-                process.exit(0);
-            });
+            // ).catch(function(err) {
+            //     console.error('Error occurred creating database connection pool', err);
+            //     console.log('Exiting process');
+            //     process.exit(0);
+            // });
         
             
             //mimic a slow network connection
