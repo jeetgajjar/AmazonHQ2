@@ -137,10 +137,10 @@ module.exports = function(app, passport) {
         // SIGNUP ==============================
         // =====================================
         // show the signup form
-        app.get('/signup', function(req, res) {
+        app.get('/admin', function(req, res) {
     
             // render the page and pass in any flash data if it exists
-            res.render('signup.ejs', { 
+            res.render('admin.ejs', { 
                 message: req.flash('signupMessage'),
              });
         });
@@ -159,7 +159,7 @@ module.exports = function(app, passport) {
             // console.log(res)
         })
 
-        app.post('/signup', function(req, res){
+        app.post('/admin', function(req, res){
             var httpServer;
             httpServer = http.Server(app);
             // console.log(req);
