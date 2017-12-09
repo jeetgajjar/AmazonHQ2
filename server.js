@@ -172,9 +172,9 @@ function executeQuery(query) {
       console.log('5');
       console.log("Connection was successful");
       connection.execute(query,
-        [],
          function(err, result) {
         if(err) {
+          console.log('5.1');
           console.log(err);
           return;
         }
@@ -183,7 +183,7 @@ function executeQuery(query) {
         });
         console.log('7');
         connection.close(function(err){
-          console.log("error: 7.1")
+          console.log("error: 7.1 " + err)
           return;
         });
       // connection.close(function(err){
